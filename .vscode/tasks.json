@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build and Start",
+            "type": "shell",
+            "windows": {
+                "command": "echo Finished"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build Project",
+                "Start Server"
+            ]
+        },
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "windows": {
+                "command": "./dbg/build.bat"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Start Server",
+            "type": "shell",
+            "windows": {
+                "command": "./dbg/StartServer.bat"
+            }
+        },
+        {
+            "label": "Kill Server",
+            "type": "shell",
+            "windows": {
+                "command": "./dbg/KillServer.bat"
+            }
+        }
+    ]
+}

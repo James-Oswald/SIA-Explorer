@@ -1,0 +1,1 @@
+em++ ./src/main.cpp -o ./build/index.html
