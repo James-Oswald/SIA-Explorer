@@ -5,6 +5,11 @@
 #include "vm.h"
 
 EMSCRIPTEN_KEEPALIVE
-int main(int lol){
-    printf("Hello World");
+int ret(int a){
+    printf("Hello World\n");
+    return a;
+}
+
+int main(){
+    EM_ASM(start());
 }
