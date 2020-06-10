@@ -6,8 +6,8 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:8000/index.html",
-            "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "Start Server",
+            "webRoot": "${workspaceFolder}/build",
+            "preLaunchTask": "Build and Start",
             "postDebugTask": "Kill Server"
         }
     ]

@@ -1,15 +1,13 @@
 
 
-#ifndef VM_H
-#define VM_H
-
 /*
 	James Oswald
 	ICSI 404
 	Virtual Machine Assignment
-	NO LONGER VALID
-	Compiled using gcc 9.3.0 via msys64
 */
+
+#ifndef VM_H
+#define VM_H
 
 #include<stdio.h>
 #include<stdlib.h>

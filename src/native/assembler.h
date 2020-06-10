@@ -1,3 +1,4 @@
+
 #ifndef ASM_H
 #define ASM_H
 
@@ -105,10 +106,12 @@ int strInstrCmp(const void *s, const void *i){
 	return strcmp(x, y);
 }
 
+#define Null 0
+
 //Finds an instruction by name in O(log(n)) time
 //better then an if else chain, switch case, or linear search which would have been O(n)
 instruction* instrLookup(char* name){
-	static const uint8_t Null = 0;
+	//static const uint8_t Null = 0;
 	static bool first = true;
 	static instruction instructionTable[22] =
 	{
@@ -143,6 +146,8 @@ instruction* instrLookup(char* name){
 	instruction* instrPtr = (instruction*)bsearch((void*)name, (void*)instructionTable, 22, sizeof(instruction), strInstrCmp);
 	return instrPtr;
 }
+
+#undef Null
 
 void lowercase(char* string){
 	for(uint32_t i = 0; string[i]; i++)

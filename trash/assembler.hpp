@@ -1,4 +1,4 @@
-#ifndef ASM_HPP
+/*#ifndef ASM_HPP
 #define ASM_HPP
 
 #include<cstdint>
@@ -29,3 +29,4 @@ void assembleLine(const string& line, vector<uint8_t>& output,  uint32_t lineNum
 }
 
 #endif
+*/

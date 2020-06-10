@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "string": "cpp"
+    },
+
+    //include for emsripten.h
+    "C_Cpp.default.includePath": ["D:\\Programming\\emcc\\emsdk\\upstream\\emscripten\\system\\include"],
+
+    //The emcc compiler uses gcc since constants like EMSCRIPTEN_KEEPALIVE expand to gcc specific things, its req for compiling with emscripten.h
+    "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe"
+}
