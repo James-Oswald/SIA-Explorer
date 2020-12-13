@@ -6,6 +6,9 @@
     background-attachment: red;
 }
 
+.inline{
+    display: inline-block;
+}
 
 .highlightTextarea{
     display: inline-block;
