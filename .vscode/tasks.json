@@ -17,7 +17,7 @@
             "label": "Build Project",
             "type": "shell",
             "windows": {
-                "command": "./dbg/build.bat"
+                "command": "${workspaceFolder}/dbg/build.bat"
             },
             "problemMatcher": [],
             "group": {
@@ -29,14 +29,14 @@
             "label": "Start Server",
             "type": "shell",
             "windows": {
-                "command": "./dbg/StartServer.bat"
+                "command": "${workspaceFolder}/dbg/StartServer.bat"
             }
         },
         {
             "label": "Kill Server",
             "type": "shell",
             "windows": {
-                "command": "./dbg/KillServer.bat"
+                "command": "${workspaceFolder}/dbg/KillServer.bat"
             }
         }
     ]

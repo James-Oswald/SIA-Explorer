@@ -1,0 +1,12 @@
+.warn{
+    background-color: yellow;
+}
+
+.error{
+    background-attachment: red;
+}
+
+
+.highlightTextarea{
+    display: inline-block;
+}

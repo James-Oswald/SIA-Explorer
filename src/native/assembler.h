@@ -184,6 +184,7 @@ void getWords(char* line, char** wordsList){
 		wordsList[++i] = strtok(NULL, " ");
 }
 
+
 void assembleLine(char* line, uint8_t* outputBytes, uint32_t* numberOutputBytes, uint32_t lineNumber, char* errorMessage, char* warningMessage){
 	replaceTabsAndNewlines(line);
 	fixWhitespace(line);

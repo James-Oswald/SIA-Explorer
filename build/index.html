@@ -1,12 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf8"/>
     <title>About</title>
-    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <link rel="stylesheet" href="index.css"/>
+    <script src="/lib/lwtah.min.js"></script>
     <script src="SIA.js"></script>
     <script src="index.js"></script>
 </head>
 <body>
-    <h1> Godbye world </h1>
+    <!--<div class="textBoxContainer">
+        <div class="backdrop">
+
+        </div>
+        <textarea class="textBoxInput">
+            <span class="warn">Hello There Warn</span>
+            <span class="error">Hello There Err</span>
+        </textarea>
+    </div> -->
+    <div>
+        <textarea cols="50" rows="30" id="SIAInput"></textarea>
+        <textarea cols="20" rows="30" id="SIAOutput"></textarea>
+    </div>
+    <br/>
+    <textarea cols="71" rows="6" id="SIADebug"></textarea>
+    <br/>
+    <button onclick="assemble()">Assemble</button>
 </body>
 </html>
