@@ -1,3 +1,4 @@
 build/* linguist-detectable=false
 sandbox/* linguist-detectable=false
 dbg/* linguist-detectable=false
+*.h linguist-language=C
