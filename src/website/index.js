@@ -4,12 +4,24 @@
 let initalized = false;
 let assembleLine = null;
 let errorSize = null;
+let memorySize = null;
+let vmStep = null;
+let loadPgrm = null;
+let getMem = null;
+let getReg = null;
+let getPC = null;
 
 function start(){
     try{
         lwtahSetUpdateOnInput(false);
         assembleLine = Module.cwrap("assembleLineW", "null", ["string", "number", "number", "number", "number", "number"]);
         errorSize = Module.cwrap("getMaxErrorSize", "number", []);
+        memorySize = Module.cwrap("getMemorySize", "number", []);
+        vmStep = Module.cwrap("vmStep", "null", []);
+        loadPgrm = Module.cwrap("loadProgram", "null", ["number", "number"]);   //u8* memory, int length 
+        getMem = Module.cwrap("getMem", "number", []);  //ret u8* to mem
+        getReg = Module.cwrap("getReg", "number", []);  //ret u32* to registers
+        getPC = Module.cwrap("getPC", "number", []);    //ret u32 PC value
         initalized = true;
         console.log("WASM init sucessfull");
     }catch(err){
@@ -17,8 +29,16 @@ function start(){
     }
 }
 
-function assembleCallback(warning, error){
-
+function setMode(mode){
+    let asm = document.getElementById("asmCont");
+    let vm = document.getElementById("vmCont");
+    if(mode == "asm"){
+        asm.style.display = "block";
+        vm.style.display = "none";
+    }else{
+        asm.style.display = "none";
+        vm.style.display = "block";
+    }
 }
 
 function assemble(){
@@ -39,12 +59,14 @@ function assemble(){
     let warningPtr = Module._malloc(maxErrSize);    //The pointer to a warning message
 
     let tags = [];
+    let machineCode = [];
     let processedInput = "";
+    
     
     for(let i = 0; i < lines.length; i++){
         let line = lines[i];
-        for(let j = 0; j < maxErrSize; j++){    //0s out the entire error and warning buffer? 
-            Module.HEAPU8.set([0], errorPtr + j)
+        for(let j = 0; j < maxErrSize; j++){    //0s out the entire error and warning buffer 
+            Module.HEAPU8.set([0], errorPtr + j);
             Module.HEAPU8.set([0], warningPtr + j);
         }
         assembleLine(line, outputBytesPtr, numOutputBytesPtr, i, errorPtr, warningPtr);
@@ -62,8 +84,10 @@ function assemble(){
         let inputTagEnd = processedInput.length;
 
         let outputTagStart = output.value.length;
-        for(let j = 0; j < numOutputBytes; j++)
+        for(let j = 0; j < numOutputBytes; j++){
             output.value += ("0" + outputBytes[j].toString(16)).slice(-2);
+            machineCode.push(outputBytes[j]);
+        }
         let outputTagEnd = output.value.length;
         output.value += "\n";
 
@@ -79,6 +103,14 @@ function assemble(){
         else if(warning != "")
             tags.push([[inputTagStart, inputTagEnd],[outputTagStart, outputTagEnd],[debugTagStart,debugTagEnd], "#fff2cc"]);
     }
+
+    //Send the assembled machine code to the VM
+    let machineCodeBuffer = Module._malloc(machineCode.length);
+    Module.HEAPU8.set(Uint8Array.from(machineCode), machineCodeBuffer);
+    loadPgrm(machineCodeBuffer, machineCode.length);
+    displayVM();
+
+    //Error and warning highlighting code 
     lwtahClear("SIAInput");
     lwtahClear("SIAOutput");
     lwtahClear("SIADebug");
@@ -87,4 +119,30 @@ function assemble(){
         lwtahAddRange("SIAOutput", tags[i][1], tags[i][3]);
         lwtahAddRange("SIADebug", tags[i][2], tags[i][3]);
     }   
+}
+
+function step(){
+    if(!initalized)
+        throw new Error("Can't run VM untill WASM is initilized");
+    vmStep();
+    displayVM();
+}
+
+function displayVM(){
+    if(!initalized)
+        throw new Error("Can't Display VM untill WASM is initilized");
+    let regArea = document.getElementById("registers");
+    let memArea = document.getElementById("memory");
+    regArea.value = "";
+    memArea.value = "";
+    let memSize = memorySize();
+    let memory = new Uint8Array(Module.HEAPU8.buffer, getMem(), memSize);
+    let registers = new Uint32Array(Module.HEAPU32.buffer, getReg(), 16);
+    for(let i = 0; i < memory.length; i++){
+        memArea.value += ("0" + memory[i].toString(16)).slice(-2) + " "; 
+    }
+    regArea.value += "PC:   " + getPC() + "\n";
+    for(let i = 0; i < registers.length; i++){
+        regArea.value += ("r" + i + ":   ").slice(0, 6) + registers[i] + "\n";
+    }
 }

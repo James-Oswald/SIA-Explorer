@@ -9,13 +9,26 @@
     <script src="index.js"></script>
 </head>
 <body>
-    <div>
-        <textarea class="inline" cols="50" rows="30" id="SIAInput"></textarea>
-        <textarea class="inline" cols="20" rows="30" id="SIAOutput"></textarea>
+    <fieldset>
+        <legend>Mode:</legend>
+        <input type="radio" id="asmRadio" name="mode" onchange="setMode('asm')" value="asm" checked>
+        <label for="asmRadio">Assemble</label><br>
+        <input type="radio" id="vmRadio" name="mode" onchange="setMode('vm')" value="vm">
+        <label for="vmRadio">Run VM</label><br>
+    </fieldset>
+    <div id="asmCont">
+        <div>
+            <textarea class="inline" cols="50" rows="30" id="SIAInput"></textarea>
+            <textarea class="inline" cols="20" rows="30" id="SIAOutput"></textarea>
+        </div>
+        <br/>
+        <textarea cols="71" rows="6" id="SIADebug"></textarea>
+        <br/>
+        <button onclick="assemble()">Assemble</button>
     </div>
-    <br/>
-    <textarea cols="71" rows="6" id="SIADebug"></textarea>
-    <br/>
-    <button onclick="assemble()">Assemble</button>
+    <div id="vmCont" style="display:none;">
+        <textarea class="inline" cols="20" rows="30" id="registers"></textarea>
+        <textarea class="inline" cols="60" rows="30" id="memory"></textarea>
+    </div>
 </body>
 </html>

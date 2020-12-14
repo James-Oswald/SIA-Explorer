@@ -19,6 +19,46 @@ void assembleLineW(char* line, uint8_t* outputBytes, uint32_t* numberOutputBytes
     assembleLine(line, outputBytes, numberOutputBytes, lineNumber, errorMessage, warningMessage);
 }
 
+EMSCRIPTEN_KEEPALIVE
+int getMemorySize(){
+    return memorySize;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void loadProgram(uint8_t* pgrm, int pgrmLength){
+	programCounter = 0;
+	haltFlag = false;
+	memset(registers, 0, 16 * sizeof(u32));
+	registers[15] = memorySize;
+	memset(memory, 0, memorySize);
+	memcpy(memory, pgrm, pgrmLength);
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint8_t* getMem(){
+	return memory;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t* getReg(){
+	return registers;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t getPC(){
+	return programCounter;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void vmStep(){
+	if(!haltFlag){
+		fetch();
+		decode();
+		execute();
+		store();
+	}
+}
+
 int main(){
-    EM_ASM(start());
+    EM_ASM(start(););
 }
