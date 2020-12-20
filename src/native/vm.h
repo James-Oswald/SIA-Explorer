@@ -1,5 +1,11 @@
 
+/*
+//Later additions for other interupts
 
+void setPixel();
+void display();
+void printChar();
+*/
 /*
 	James Oswald
 	ICSI 404
@@ -142,7 +148,7 @@ step N(int i){return N##Lookup[i];}
 #define EXECUTE 1
 #define STORE 2
 
-const step interruptLookupTable[] = {printRegisters, printMemory};
+const step interruptLookupTable[] = {printRegisters, printMemory}; //, setPixel, display, printChar};
 
 /*Format: Template(Instruction Name, Decode Code, Execute Code, Store Code,)*/
 

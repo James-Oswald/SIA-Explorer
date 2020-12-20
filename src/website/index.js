@@ -1,7 +1,12 @@
 
 "use strict"
 
-let initalized = false;
+//default values for various program states
+let initalized = false;        //wasm initilization 
+//let displayOnAll = true;
+let machineCodeLen = 0;
+
+//wasm functions, will be set if initalized == true
 let assembleLine = null;
 let errorSize = null;
 let memorySize = null;
@@ -10,7 +15,9 @@ let loadPgrm = null;
 let getMem = null;
 let getReg = null;
 let getPC = null;
+let getHalt = null;
 
+//init wasm functions
 function start(){
     try{
         lwtahSetUpdateOnInput(false);
@@ -22,11 +29,49 @@ function start(){
         getMem = Module.cwrap("getMem", "number", []);  //ret u8* to mem
         getReg = Module.cwrap("getReg", "number", []);  //ret u32* to registers
         getPC = Module.cwrap("getPC", "number", []);    //ret u32 PC value
+        getHalt = Module.cwrap("getHalt", "number", []);
         initalized = true;
         console.log("WASM init sucessfull");
+        if(document.readyState === "complete")
+            setUpProgram();
+        else
+            window.addEventListener("load", setUpProgram);
     }catch(err){
         console.error(err);
     }
+}
+
+function setUpProgram(){
+    document.getElementById("SIAInput").value =
+`move 0 r4
+move 20 r5
+move 1 r6
+move 0 r0
+move 0 r1
+push r1
+move 1 r2
+push r2
+branchifequal r0 r5 9
+add r1 r2 r3 
+add r2 r4 r1
+add r3 r4 r2
+push r2
+add r0 r6 r0
+jump 8
+halt`;
+    assemble();
+}
+//=====================================================
+//Swap between assembler and VM modes
+
+window.addEventListener("load", hideVM);
+
+function hideVM(){
+    if(lwtahInit){  //black magic to make sure we have our box sizes
+        let vm = document.getElementById("vmCont");
+        vm.style.display = "none";
+    }else
+        setTimeout(hideVM, 100);
 }
 
 function setMode(mode){
@@ -40,6 +85,9 @@ function setMode(mode){
         vm.style.display = "block";
     }
 }
+
+//=====================================================
+//application calls
 
 function assemble(){
     if(!initalized)
@@ -108,6 +156,7 @@ function assemble(){
     let machineCodeBuffer = Module._malloc(machineCode.length);
     Module.HEAPU8.set(Uint8Array.from(machineCode), machineCodeBuffer);
     loadPgrm(machineCodeBuffer, machineCode.length);
+    machineCodeLen = machineCode.length
     displayVM();
 
     //Error and warning highlighting code 
@@ -135,14 +184,29 @@ function displayVM(){
     let memArea = document.getElementById("memory");
     regArea.value = "";
     memArea.value = "";
+    lwtahClear("registers");
+    lwtahClear("memory");
     let memSize = memorySize();
     let memory = new Uint8Array(Module.HEAPU8.buffer, getMem(), memSize);
     let registers = new Uint32Array(Module.HEAPU32.buffer, getReg(), 16);
+    let pc = getPC();
     for(let i = 0; i < memory.length; i++){
-        memArea.value += ("0" + memory[i].toString(16)).slice(-2) + " "; 
+        let tagStart = memArea.value.length;
+        memArea.value += ("0" + memory[i].toString(16)).slice(-2) + " ";
+        let tagEnd = memArea.value.length;
+
+        //coloring rules for memory
+        if(i == pc)
+            lwtahAddRange("memory", [tagStart, tagEnd], "#f4cccc");
+        else if(i >= registers[15])
+            lwtahAddRange("memory" , [tagStart, tagEnd], "#d9d2e9");
+        else if(i < machineCodeLen)
+            lwtahAddRange("memory" , [tagStart, tagEnd], "#fff2cc");    
     }
-    regArea.value += "PC:   " + getPC() + "\n";
+    regArea.value += "Halt: " + getHalt() + "\n";
+    let toHex = i =>"0x" + ("0000000" + i.toString(16)).slice(-8) //32-bit hex converter
+    regArea.value += "PC:   " + toHex(pc) + "\n";
     for(let i = 0; i < registers.length; i++){
-        regArea.value += ("r" + i + ":   ").slice(0, 6) + registers[i] + "\n";
+        regArea.value += ("r" + i + ":   ").slice(0, 6) + toHex(registers[i]) + "\n";
     }
 }

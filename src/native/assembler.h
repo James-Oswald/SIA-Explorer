@@ -13,6 +13,7 @@
 #include<stdlib.h>
 #include<stdint.h>
 #include<stdbool.h>
+#include<math.h>
 
 #define MAX_ERR_SIZE 200
 #define MAX_LINE_SIZE 100
@@ -42,7 +43,11 @@ uint32_t getImmediate(char* immediateAsString, uint8_t maxBits, uint32_t lineNum
 		snprintf(errorMessage, MAX_ERR_SIZE, "ERROR Line %d: %s is not a valid number!\n", lineNumber, immediateAsString);
 		return 0;
 	}
-	if(num > maxValue)
+	if(maxBits != 8 && (int32_t)num < 0){ //can only use a negivitve imediate on move (i think)
+		snprintf(errorMessage, MAX_ERR_SIZE, "ERROR Line %d: can not use a negative immediate (%s) here!\n", lineNumber, immediateAsString);
+		return 0;
+	}
+	if((maxBits != 8 && num > maxValue) || (maxBits == 8 && abs((int32_t)num) > (maxValue >> 1)))
 		snprintf(warningMessage, MAX_ERR_SIZE, "WARNING Line %d: %d was too large to fit inside an immediate %d bit wide location, extra bits will be trimmed!\n", lineNumber, num, maxBits);
 	return maxValue & num;
 }

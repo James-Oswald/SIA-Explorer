@@ -9,6 +9,15 @@ int getMaxLineSize(){
     return MAX_LINE_SIZE;
 }
 
+/*
+void setPixel(){
+	EM_ASM(setPixel(););
+}
+
+void display(){
+	EM_ASM(display(););
+}*/
+
 EMSCRIPTEN_KEEPALIVE
 int getMaxErrorSize(){
     return MAX_ERR_SIZE;
@@ -47,6 +56,11 @@ uint32_t* getReg(){
 EMSCRIPTEN_KEEPALIVE
 uint32_t getPC(){
 	return programCounter;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t getHalt(){
+	return (uint32_t)haltFlag;
 }
 
 EMSCRIPTEN_KEEPALIVE

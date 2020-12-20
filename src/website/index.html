@@ -17,6 +17,7 @@
         <label for="vmRadio">Run VM</label><br>
     </fieldset>
     <div id="asmCont">
+        <button onclick="assemble()">Assemble</button>
         <div>
             <textarea class="inline" cols="50" rows="30" id="SIAInput"></textarea>
             <textarea class="inline" cols="20" rows="30" id="SIAOutput"></textarea>
@@ -24,11 +25,20 @@
         <br/>
         <textarea cols="71" rows="6" id="SIADebug"></textarea>
         <br/>
-        <button onclick="assemble()">Assemble</button>
     </div>
-    <div id="vmCont" style="display:none;">
-        <textarea class="inline" cols="20" rows="30" id="registers"></textarea>
-        <textarea class="inline" cols="60" rows="30" id="memory"></textarea>
+    <div id="vmCont">
+        <button onclick="step()">Step VM</button>
+        <!--<fieldset>
+            <legend>Update Display Mode:</legend>
+            <input type="radio" id="udStep" name="udStep" onchange="displayOnAll=true">
+            <label for="udStep">Update Display on Every Step</label><br>
+            <input type="radio" id="udInter" name="udInter" onchange="displayOnAll=false" checked>
+            <label for="udInter">Update Display on Interupt 0</label><br>
+        </fieldset>-->
+        <div>
+            <textarea class="inline" cols="20" rows="30" id="registers"></textarea>
+            <textarea class="inline" cols="110" rows="30" id="memory"></textarea>
+        </div>
     </div>
 </body>
 </html>
