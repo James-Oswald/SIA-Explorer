@@ -9,35 +9,52 @@
     <script src="index.js"></script>
 </head>
 <body>
-    <fieldset>
-        <legend>Mode:</legend>
-        <input type="radio" id="asmRadio" name="mode" onchange="setMode('asm')" value="asm" checked>
-        <label for="asmRadio">Assemble</label><br>
-        <input type="radio" id="vmRadio" name="mode" onchange="setMode('vm')" value="vm">
-        <label for="vmRadio">Run VM</label><br>
-    </fieldset>
-    <div id="asmCont">
-        <button onclick="assemble()">Assemble</button>
-        <div>
-            <textarea class="inline" cols="50" rows="30" id="SIAInput"></textarea>
-            <textarea class="inline" cols="20" rows="30" id="SIAOutput"></textarea>
+    <div style="margin-right: auto; margin-left: auto;">
+        <p>
+            Welcome to SIA(simple instruction architecture) explorer. This is an online version of
+            an assembler and VM for SIA written in C, but ported online using Web Assembly.
+            You can find the source on <a href="https://github.com/James-Oswald/SIA-Explorer">my Github</a>.
+            This version corresponds to the version of SIA used in Spring 2020, however it should be noted that
+            the SIA standard, opcodes and all, changes on a yearly basis. Unfortunately, I've lost the Spring 2020
+            SIA reference document, so the only way to get a full list of instructions is to look at the assembler code on
+            the GitHub. If I obtain a copy in the future I will link it here. I have managed to locate a 2018 standard, 
+            with slightly different opcodes and instructions that can be found <a href="/SIA.pdf">here</a>.
+        </p>
+        <p>
+            The default program displayed computes the first 20 fibonachi sequence numbers and pushes them onto the stack. 
+            Interrupts are printed the the page JS console which can be displayed with F12. It should also be noted that
+            resizing your screen will break highlighting, if this happens, please reload the page. 
+        </p>
+        <fieldset>
+            <legend>Mode:</legend>
+            <input type="radio" id="asmRadio" name="mode" onchange="setMode('asm')" value="asm" checked>
+            <label for="asmRadio">Assemble</label><br>
+            <input type="radio" id="vmRadio" name="mode" onchange="setMode('vm')" value="vm">
+            <label for="vmRadio">Run VM</label><br>
+        </fieldset>
+        <div id="asmCont">
+            <button onclick="assemble()">Assemble</button>
+            <div>
+                <textarea class="inline" cols="50" rows="30" id="SIAInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                <textarea class="inline" cols="20" rows="30" id="SIAOutput" readonly></textarea>
+            </div>
+            <br/>
+            <textarea cols="71" rows="6" id="SIADebug"></textarea>
+            <br/>
         </div>
-        <br/>
-        <textarea cols="71" rows="6" id="SIADebug"></textarea>
-        <br/>
-    </div>
-    <div id="vmCont">
-        <button onclick="step()">Step VM</button>
-        <!--<fieldset>
-            <legend>Update Display Mode:</legend>
-            <input type="radio" id="udStep" name="udStep" onchange="displayOnAll=true">
-            <label for="udStep">Update Display on Every Step</label><br>
-            <input type="radio" id="udInter" name="udInter" onchange="displayOnAll=false" checked>
-            <label for="udInter">Update Display on Interupt 0</label><br>
-        </fieldset>-->
-        <div>
-            <textarea class="inline" cols="20" rows="30" id="registers"></textarea>
-            <textarea class="inline" cols="110" rows="30" id="memory"></textarea>
+        <div id="vmCont">
+            <button onclick="step()">Step VM</button>
+            <!--<fieldset>
+                <legend>Update Display Mode:</legend>
+                <input type="radio" id="udStep" name="udStep" onchange="displayOnAll=true">
+                <label for="udStep">Update Display on Every Step</label><br>
+                <input type="radio" id="udInter" name="udInter" onchange="displayOnAll=false" checked>
+                <label for="udInter">Update Display on Interupt 0</label><br>
+            </fieldset>-->
+            <div>
+                <textarea class="inline" cols="20" rows="30" id="registers" readonly></textarea>
+                <textarea class="inline" cols="100" rows="30" id="memory" readonly></textarea>
+            </div>
         </div>
     </div>
 </body>

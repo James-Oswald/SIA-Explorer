@@ -23,7 +23,7 @@ void printChar();
 typedef uint8_t u8;
 typedef uint32_t u32;
 
-#define memorySize 1000
+#define memorySize 1020
 
 u32 registers[16] = {0};
 u32 programCounter = 0;
